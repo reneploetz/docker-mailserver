@@ -16,7 +16,7 @@
         <link rel="canonical" href="https://docker-mailserver.github.io/docker-mailserver/edge/config/security/ssl/">
       
       <link rel="icon" href="../../../assets/logo/favicon-32x32.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.1.5">
+      <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.8">
     
     
       
@@ -24,10 +24,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.bde7dde4.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ca7ac06f.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ef6f36e2.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.f1a3b89f.min.css">
         
       
     
@@ -46,6 +46,8 @@
     
     
       
+
+
     
     
   </head>
@@ -111,7 +113,7 @@
         
           
           
-          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo" type="radio" name="__palette" id="__palette_1">
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
           
             <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31z"/></svg>
@@ -120,7 +122,7 @@
         
           
           
-          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="blue" type="radio" name="__palette" id="__palette_2">
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
           
             <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22z"/></svg>
@@ -680,6 +682,19 @@
   <a href="#self-signed-certificates" class="md-nav__link">
     Self-Signed Certificates
   </a>
+  
+    <nav class="md-nav" aria-label="Self-Signed Certificates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generating-a-self-signed-certificate" class="md-nav__link">
+    Generating a self-signed certificate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1396,6 +1411,19 @@
     Self-Signed Certificates
   </a>
   
+    <nav class="md-nav" aria-label="Self-Signed Certificates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#generating-a-self-signed-certificate" class="md-nav__link">
+    Generating a self-signed certificate
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1806,36 +1834,58 @@
 <p class="admonition-title">Warning</p>
 <p>Use self-signed certificates only for testing purposes!</p>
 </div>
-<p>You can  generate a self-signed SSL certificate by using the following command:</p>
-<div class="highlight"><pre><span></span><code>docker run -it --rm -v <span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">&quot;</span>/config/ssl:/tmp/docker-mailserver/ssl -h mail.my-domain.com -t mailserver/docker-mailserver generate-ssl-certificate
-
-<span class="c1"># Press enter</span>
-<span class="c1"># Enter a password when needed</span>
-<span class="c1"># Fill information like Country, Organisation name</span>
-<span class="c1"># Fill &quot;my-domain.com&quot; as FQDN for CA, and &quot;mail.my-domain.com&quot; for the certificate.</span>
-<span class="c1"># They HAVE to be different, otherwise you&#39;ll get a `TXT_DB error number 2`</span>
-<span class="c1"># Don&#39;t fill extras</span>
-<span class="c1"># Enter same password when needed</span>
-<span class="c1"># Sign the certificate? [y/n]:y</span>
-<span class="c1"># 1 out of 1 certificate requests certified, commit? [y/n]y</span>
-
-<span class="c1"># will generate:</span>
-<span class="c1"># config/ssl/mail.my-domain.com-key.pem (used in postfix)</span>
-<span class="c1"># config/ssl/mail.my-domain.com-req.pem (only used to generate other files)</span>
-<span class="c1"># config/ssl/mail.my-domain.com-cert.pem (used in postfix)</span>
-<span class="c1"># config/ssl/mail.my-domain.com-combined.pem (used in courier)</span>
-<span class="c1"># config/ssl/demoCA/cacert.pem (certificate authority)</span>
-</code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The certificate will be generate for the container <code>fqdn</code>, that is passed as <code>-h</code> argument.</p>
-<p>Check the following page for more information regarding <a href="http://www.mad-hacking.net/documentation/linux/applications/mail/using-ssl-tls-postfix-courier.xml">postfix and SSL/TLS configuration</a>.</p>
-</div>
+<p>This feature requires you to provide the following files into your <a href="../../advanced/optional-config/"><code>config/ssl/</code> directory</a> (internal location: <code>/tmp/docker-mailserver/ssl/</code>):</p>
+<ul>
+<li><code>${HOSTNAME}-key.pem</code></li>
+<li><code>${HOSTNAME}-cert.pem</code></li>
+<li><code>demoCA/cacert.pem</code></li>
+</ul>
+<p>Where <code>${HOSTNAME}</code> is the mailserver <a href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">FQDN</a> (<code>hostname</code>(<em>mail</em>) + <code>domainname</code>(<em>example.com</em>), eg: <code>mail.example.com</code>).</p>
 <p>To use the certificate:</p>
 <ul>
-<li>Add <code>SSL_TYPE=self-signed</code> to your container environment variables</li>
+<li>Add <code>SSL_TYPE=self-signed</code> to your container environment variables.</li>
 <li>If a matching certificate (files listed above) is found in <code>config/ssl</code>, it will be automatically setup in postfix and dovecot. You just have to place them in <code>config/ssl</code> folder.</li>
 </ul>
+<h4 id="generating-a-self-signed-certificate"><a class="toclink" href="#generating-a-self-signed-certificate">Generating a self-signed certificate</a></h4>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since v10, support in <code>setup.sh</code> for generating a self-signed SSL certificate internally was removed.</p>
+<p>It is now similar to <code>SSL_TYPE=manual</code> (<em>except <code>manual</code> does not support verification for a custom CA</em>), but does not require additional ENV vars for providing the location of cert files.</p>
+</div>
+<p>One way to generate self-signed certificates is with <a href="https://smallstep.com/docs/step-cli">Smallstep's <code>step</code> CLI</a>. This is exactly what <a href="https://github.com/docker-mailserver/docker-mailserver/tree/master/test/test-files/ssl/example.test"><code>docker-mailserver</code> does for creating test certificates</a>.</p>
+<p>For example with the FQDN <code>mail.example.test</code>, you can generate the required files by running:</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#! /bin/sh</span>
+mkdir -p demoCA
+
+step certificate create <span class="s2">&quot;Smallstep Root CA&quot;</span> <span class="s2">&quot;demoCA/cacert.pem&quot;</span> <span class="s2">&quot;demoCA/cakey.pem&quot;</span> <span class="se">\</span>
+  --no-password --insecure <span class="se">\</span>
+  --profile root-ca <span class="se">\</span>
+  --not-before <span class="s2">&quot;2021-01-01T00:00:00+00:00&quot;</span> <span class="se">\</span>
+  --not-after <span class="s2">&quot;2031-01-01T00:00:00+00:00&quot;</span> <span class="se">\</span>
+  --san <span class="s2">&quot;example.test&quot;</span> <span class="se">\</span>
+  --san <span class="s2">&quot;mail.example.test&quot;</span> <span class="se">\</span>
+  --kty RSA --size <span class="m">2048</span>
+
+step certificate create <span class="s2">&quot;Smallstep Leaf&quot;</span> mail.example.test-cert.pem mail.example.test-key.pem <span class="se">\</span>
+  --no-password --insecure <span class="se">\</span>
+  --profile leaf <span class="se">\</span>
+  --ca <span class="s2">&quot;demoCA/cacert.pem&quot;</span> <span class="se">\</span>
+  --ca-key <span class="s2">&quot;demoCA/cakey.pem&quot;</span> <span class="se">\</span>
+  --not-before <span class="s2">&quot;2021-01-01T00:00:00+00:00&quot;</span> <span class="se">\</span>
+  --not-after <span class="s2">&quot;2031-01-01T00:00:00+00:00&quot;</span> <span class="se">\</span>
+  --san <span class="s2">&quot;example.test&quot;</span> <span class="se">\</span>
+  --san <span class="s2">&quot;mail.example.test&quot;</span> <span class="se">\</span>
+  --kty RSA --size <span class="m">2048</span>
+</code></pre></div>
+<p>If you'd rather not install the CLI tool locally to run the <code>step</code> commands above; you can save the script above to a file such as <code>generate-certs.sh</code> (<em>and make it executable <code>chmod +x generate-certs.sh</code></em>) in a directory that you want the certs to be placed, then run that script with docker:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># --user to keep ownership of the files to your user and group ID</span>
+docker run --rm -it <span class="se">\</span>
+  --user <span class="s2">&quot;</span><span class="k">$(</span>id -u<span class="k">)</span><span class="s2">:</span><span class="k">$(</span>id -g<span class="k">)</span><span class="s2">&quot;</span> <span class="se">\</span>
+  --volume <span class="s2">&quot;</span><span class="si">${</span><span class="nv">PWD</span><span class="si">}</span><span class="s2">:/tmp&quot;</span> <span class="se">\</span>
+  --workdir <span class="s2">&quot;/tmp&quot;</span> <span class="se">\</span>
+  --entrypoint <span class="s2">&quot;/tmp/generate-certs.sh&quot;</span> <span class="se">\</span>
+  smallstep/step-ca
+</code></pre></div>
 <h2 id="custom-certificate-files"><a class="toclink" href="#custom-certificate-files">Custom Certificate Files</a></h2>
 <p>You can also provide your own certificate files. Add these entries to your <code>docker-compose.yml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">volumes</span><span class="p">:</span>
@@ -2000,7 +2050,8 @@ openssl s_client <span class="se">\</span>
   
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
-        <a href="../understanding-the-ports/" class="md-footer__link md-footer__link--prev" rel="prev">
+        
+        <a href="../understanding-the-ports/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Understanding the Ports" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -2015,7 +2066,8 @@ openssl s_client <span class="se">\</span>
         </a>
       
       
-        <a href="../fail2ban/" class="md-footer__link md-footer__link--next" rel="next">
+        
+        <a href="../fail2ban/" class="md-footer__link md-footer__link--next" aria-label="Next: Fail2Ban" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
@@ -2054,10 +2106,10 @@ openssl s_client <span class="se">\</span>
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.expand", "navigation.instant"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.d351de03.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.expand", "navigation.instant"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.b0710199.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.a1609d9a.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.76f349be.min.js"></script>
       
     
   </body>
