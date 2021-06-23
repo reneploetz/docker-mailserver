@@ -1057,6 +1057,18 @@
   
 
           
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/uses-cases/imap-folders/" class="md-nav__link">
+        Customize IMAP Folders
+      </a>
+    </li>
+  
+
+          
         </ul>
       </nav>
     </li>
@@ -1144,6 +1156,26 @@
   <a href="#what-about-backups" class="md-nav__link">
     What about backups?
   </a>
+  
+    <nav class="md-nav" aria-label="What about backups?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bind-mounts-default" class="md-nav__link">
+    Bind mounts (default)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumes" class="md-nav__link">
+    Volumes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1472,6 +1504,26 @@
     What about backups?
   </a>
   
+    <nav class="md-nav" aria-label="What about backups?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bind-mounts-default" class="md-nav__link">
+    Bind mounts (default)
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumes" class="md-nav__link">
+    Volumes
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1673,14 +1725,20 @@ This image is based on config files that can be persisted using Docker volumes, 
 <p>All files are using the Unix format with <code>LF</code> line endings.</p>
 <p>Please do not use <code>CRLF</code>.</p>
 <h3 id="what-about-backups"><a class="toclink" href="#what-about-backups">What about backups?</a></h3>
+<h4 id="bind-mounts-default"><a class="toclink" href="#bind-mounts-default">Bind mounts (default)</a></h4>
+<p>From the location of your <code>docker-compose.yml</code>, create a compressed archive of your <code>./config</code> and <code>./data</code> folders:</p>
+<div class="highlight"><pre><span></span><code>tar --gzip -cf <span class="s2">&quot;backup-</span><span class="k">$(</span>date +%F<span class="k">)</span><span class="s2">.tar.gz&quot;</span> config data
+</code></pre></div>
+<p>Then to restore <code>./config</code> and <code>./data</code> folders from your backup file:</p>
+<div class="highlight"><pre><span></span><code>tar --gzip -xf backup-date.tar.gz
+</code></pre></div>
+<h4 id="volumes"><a class="toclink" href="#volumes">Volumes</a></h4>
 <p>Assuming that you use <code>docker-compose</code> and data volumes, you can backup the configuration, emails and logs like this:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># create backup</span>
-docker run --rm -ti <span class="se">\</span>
-  -v maildata:/var/mail <span class="se">\</span>
-  -v mailstate:/var/mail-state <span class="se">\</span>
-  -v maillogs:/var/logs/mail <span class="se">\</span>
+docker run --rm -it <span class="se">\</span>
   -v <span class="s2">&quot;</span><span class="nv">$PWD</span><span class="s2">/config&quot;</span>:/tmp/docker-mailserver <span class="se">\</span>
   -v /backup/mail:/backup <span class="se">\</span>
+  --volumes-from mailserver <span class="se">\</span>
   alpine:latest <span class="se">\</span>
   tar czf <span class="s2">&quot;/backup/mail-</span><span class="k">$(</span>date +%F<span class="k">)</span><span class="s2">.tar.gz&quot;</span> /var/mail /var/mail-state /var/logs/mail /tmp/docker-mailserver
 
@@ -1943,7 +2001,7 @@ supervisorctl update
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../examples/uses-cases/forward-only-mailserver-with-ldap-authentication/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Forward-Only Mailserver with LDAP" rel="prev">
+        <a href="../examples/uses-cases/imap-folders/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Customize IMAP Folders" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -1952,7 +2010,7 @@ supervisorctl update
               <span class="md-footer__direction">
                 Previous
               </span>
-              Forward-Only Mailserver with LDAP
+              Customize IMAP Folders
             </div>
           </div>
         </a>
