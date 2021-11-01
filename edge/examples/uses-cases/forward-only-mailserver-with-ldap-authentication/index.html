@@ -16,7 +16,7 @@
         <link rel="canonical" href="https://docker-mailserver.github.io/docker-mailserver/edge/examples/uses-cases/forward-only-mailserver-with-ldap-authentication/">
       
       <link rel="icon" href="../../../assets/logo/favicon-32x32.png">
-      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.3.0">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.5">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.8b42a75e.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.cdeb8541.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.3f5d1f46.min.css">
@@ -1248,6 +1248,8 @@
       </a>
       
         
+
+
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
@@ -1456,6 +1458,8 @@
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
+
+
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
@@ -1541,7 +1545,7 @@
 <span class="na">userPassword</span><span class="o">:</span> <span class="s">{SSHA}abcdefghi123456789</span>
 <span class="na">email</span><span class="o">:</span> <span class="s">external-account@gmail.com</span>
 </code></pre></div>
-<p>This structure is different from what is expected/assumed from the configuration scripts of <code>docker-mailserver</code>, so it doesn't work just by using the <code>LDAP_QUERY_FILTER_...</code> settings. Instead, I had to use a custom configuration (<a href="./config/advanced/override-defaults/user-patches.md">via <code>user-patches.sh</code></a>). I created the script <code>docker-data/dms/config/user-patches.sh</code>, with content like this:</p>
+<p>This structure is different from what is expected/assumed from the configuration scripts of <code>docker-mailserver</code>, so it doesn't work just by using the <code>LDAP_QUERY_FILTER_...</code> settings. Instead, I had to use a custom configuration (<a href="../../../config/advanced/override-defaults/user-patches/">via <code>user-patches.sh</code></a>). I created the script <code>docker-data/dms/config/user-patches.sh</code>, with content like this:</p>
 <div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
 rm -f /etc/postfix/<span class="o">{</span>ldap-groups.cf,ldap-domains.cf<span class="o">}</span>
@@ -1669,10 +1673,10 @@ postfix reload
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.expand", "navigation.instant"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.f8263e09.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.expand", "navigation.instant"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.8397ff9e.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.4fc53ad4.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.1e84347e.min.js"></script>
       
     
   </body>
