@@ -1698,6 +1698,13 @@ Thanks goes to these wonderful people ✨
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/schnippl0r>
+            <img src=https://avatars.githubusercontent.com/u/58435847?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=schnippl0r/>
+            <br />
+            <sub style="font-size:14px"><b>schnippl0r</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/squash>
             <img src=https://avatars.githubusercontent.com/u/527457?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=squash/>
             <br />
@@ -1711,6 +1718,8 @@ Thanks goes to these wonderful people ✨
             <sub style="font-size:14px"><b>strarsis</b></sub>
         </a>
     </td>
+</tr>
+<tr>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/tamueller>
             <img src=https://avatars.githubusercontent.com/u/1902960?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=tamueller/>
@@ -1718,8 +1727,6 @@ Thanks goes to these wonderful people ✨
             <sub style="font-size:14px"><b>tamueller</b></sub>
         </a>
     </td>
-</tr>
-<tr>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/vivacarvajalito>
             <img src=https://avatars.githubusercontent.com/u/1446654?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=vivacarvajalito/>
