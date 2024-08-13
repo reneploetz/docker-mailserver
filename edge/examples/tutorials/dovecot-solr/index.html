@@ -12,25 +12,25 @@
         <meta name="author" content="docker-mailserver (Github Organization)">
       
       
-        <link rel="canonical" href="https://docker-mailserver.github.io/docker-mailserver/edge/config/advanced/auth-oauth2/">
+        <link rel="canonical" href="https://docker-mailserver.github.io/docker-mailserver/edge/examples/tutorials/dovecot-solr/">
       
       
-        <link rel="prev" href="../auth-ldap/">
+        <link rel="prev" href="../blog-posts/">
       
       
-        <link rel="next" href="../mail-sieve/">
+        <link rel="next" href="../../use-cases/forward-only-mailserver-with-ldap-authentication/">
       
       
       <link rel="icon" href="../../../assets/logo/favicon-32x32.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.13">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
     
     
       
-        <title>Advanced | Basic OAuth2 Authentication - Docker Mailserver</title>
+        <title>Dovecot FTS with Apache Solr - Docker Mailserver</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.7e359304.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.3cba04c6.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
@@ -80,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#introduction" class="md-skip">
+        <a href="#dovecot-full-text-search-fts-using-the-solr-backend" class="md-skip">
           Skip to content
         </a>
       
@@ -117,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Advanced | Basic OAuth2 Authentication
+              Dovecot FTS with Apache Solr
             
           </span>
         </div>
@@ -180,7 +180,7 @@
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -197,7 +197,7 @@
         <a href="https://github.com/docker-mailserver/docker-mailserver" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
   </div>
   <div class="md-source__repository">
     docker-mailserver
@@ -273,13 +273,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../../environment/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../config/environment/" class="md-tabs__link">
           
   
   Configuration
@@ -293,17 +291,21 @@
         
   
   
+    
+  
   
     
     
       
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../examples/tutorials/basic-installation/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../basic-installation/" class="md-tabs__link">
           
   
   Examples
@@ -420,7 +422,7 @@
       <a href="https://github.com/docker-mailserver/docker-mailserver" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
   </div>
   <div class="md-source__repository">
     docker-mailserver
@@ -494,28 +496,25 @@
       
   
   
-    
   
   
-  
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -526,7 +525,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             Configuration
@@ -540,7 +539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../environment/" class="md-nav__link">
+      <a href="../../../config/environment/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -560,16 +559,244 @@
   
   
   
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Account Management
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Account Management
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../../user-management/" class="md-nav__link">
+      <a href="../../../config/account-management/overview/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    User Management
+    Overview
   </span>
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2_2" id="__nav_4_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Provisioner
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Provisioner
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../config/account-management/provisioner/file/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    File Based
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../config/account-management/provisioner/ldap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    LDAP Service
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2_3" id="__nav_4_2_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Supplementary
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            Supplementary
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../config/account-management/supplementary/master-accounts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Master Accounts
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../config/account-management/supplementary/oauth2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    OAuth2 Authentication
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -622,7 +849,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../best-practices/autodiscover/" class="md-nav__link">
+      <a href="../../../config/best-practices/autodiscover/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -643,7 +870,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../best-practices/dkim_dmarc_spf/" class="md-nav__link">
+      <a href="../../../config/best-practices/dkim_dmarc_spf/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -664,7 +891,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../best-practices/mta-sts/" class="md-nav__link">
+      <a href="../../../config/best-practices/mta-sts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -733,7 +960,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../security/understanding-the-ports/" class="md-nav__link">
+      <a href="../../../config/security/understanding-the-ports/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -754,7 +981,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../security/ssl/" class="md-nav__link">
+      <a href="../../../config/security/ssl/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -775,7 +1002,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../security/fail2ban/" class="md-nav__link">
+      <a href="../../../config/security/fail2ban/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -796,7 +1023,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../security/mail_crypt/" class="md-nav__link">
+      <a href="../../../config/security/mail_crypt/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -817,7 +1044,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../security/rspamd/" class="md-nav__link">
+      <a href="../../../config/security/rspamd/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -846,7 +1073,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../debugging/" class="md-nav__link">
+      <a href="../../../config/debugging/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -867,7 +1094,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pop3/" class="md-nav__link">
+      <a href="../../../config/pop3/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -888,7 +1115,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../setup.sh/" class="md-nav__link">
+      <a href="../../../config/setup.sh/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -906,8 +1133,6 @@
                 
   
   
-    
-  
   
   
     
@@ -917,11 +1142,13 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8" >
         
           
           <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
@@ -935,7 +1162,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4_8">
             <span class="md-nav__icon md-icon"></span>
             Advanced Configuration
@@ -949,7 +1176,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../optional-config/" class="md-nav__link">
+      <a href="../../../config/advanced/optional-config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1010,7 +1237,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../maintenance/update-and-cleanup/" class="md-nav__link">
+      <a href="../../../config/advanced/maintenance/update-and-cleanup/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1079,7 +1306,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../override-defaults/dovecot/" class="md-nav__link">
+      <a href="../../../config/advanced/override-defaults/dovecot/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1100,7 +1327,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../override-defaults/postfix/" class="md-nav__link">
+      <a href="../../../config/advanced/override-defaults/postfix/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1121,7 +1348,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../override-defaults/user-patches/" class="md-nav__link">
+      <a href="../../../config/advanced/override-defaults/user-patches/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1150,103 +1377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../auth-ldap/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    LDAP Authentication
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    OAuth2 Authentication
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    OAuth2 Authentication
-  </span>
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#introduction" class="md-nav__link">
-    <span class="md-ellipsis">
-      Introduction
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-authentik-roundcube" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example (Authentik &amp; Roundcube)
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../mail-sieve/" class="md-nav__link">
+      <a href="../../../config/advanced/mail-sieve/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1267,7 +1398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../mail-fetchmail/" class="md-nav__link">
+      <a href="../../../config/advanced/mail-fetchmail/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1288,7 +1419,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../mail-getmail/" class="md-nav__link">
+      <a href="../../../config/advanced/mail-getmail/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1321,10 +1452,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8_9" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_8_7" >
         
           
-          <label class="md-nav__link" for="__nav_4_8_9" id="__nav_4_8_9_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_8_7" id="__nav_4_8_7_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -1335,8 +1466,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_8_9">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_8_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8_7">
             <span class="md-nav__icon md-icon"></span>
             Email Forwarding
           </label>
@@ -1349,7 +1480,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../mail-forwarding/relay-hosts/" class="md-nav__link">
+      <a href="../../../config/advanced/mail-forwarding/relay-hosts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1370,11 +1501,32 @@
   
   
     <li class="md-nav__item">
-      <a href="../mail-forwarding/aws-ses/" class="md-nav__link">
+      <a href="../../../config/advanced/mail-forwarding/aws-ses/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     AWS SES
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../config/advanced/mail-forwarding/gmail-smtp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configure Gmail as a relay host
   </span>
   
 
@@ -1399,7 +1551,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../full-text-search/" class="md-nav__link">
+      <a href="../../../config/advanced/full-text-search/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1420,7 +1572,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../kubernetes/" class="md-nav__link">
+      <a href="../../../config/advanced/kubernetes/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1441,7 +1593,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ipv6/" class="md-nav__link">
+      <a href="../../../config/advanced/ipv6/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1462,7 +1614,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../podman/" class="md-nav__link">
+      <a href="../../../config/advanced/podman/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1476,27 +1628,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../dovecot-master-accounts/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Dovecot Master Accounts
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -1516,25 +1647,28 @@
       
   
   
+    
   
   
+  
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   <span class="md-ellipsis">
@@ -1545,7 +1679,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Examples
@@ -1556,8 +1690,10 @@
                 
   
   
+    
   
   
+  
     
     
     
@@ -1565,13 +1701,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" checked>
         
           
           <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
@@ -1585,7 +1719,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5_1">
             <span class="md-nav__icon md-icon"></span>
             Tutorials
@@ -1599,7 +1733,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/tutorials/basic-installation/" class="md-nav__link">
+      <a href="../basic-installation/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1620,7 +1754,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/tutorials/mailserver-behind-proxy/" class="md-nav__link">
+      <a href="../mailserver-behind-proxy/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1641,7 +1775,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/tutorials/crowdsec/" class="md-nav__link">
+      <a href="../crowdsec/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1662,7 +1796,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/tutorials/docker-build/" class="md-nav__link">
+      <a href="../docker-build/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1683,7 +1817,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/tutorials/blog-posts/" class="md-nav__link">
+      <a href="../blog-posts/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1692,6 +1826,118 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Dovecot FTS with Apache Solr
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Dovecot FTS with Apache Solr
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#setup-solr-for-dms" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setup Solr for DMS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup Solr for DMS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-the-required-dovecot-solr-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add the required dovecot-solr package
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#composeyaml-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      compose.yaml config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-solr-for-dovecot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure Solr for Dovecot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trigger-dovecot-fts-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trigger Dovecot FTS indexing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1752,7 +1998,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/use-cases/forward-only-mailserver-with-ldap-authentication/" class="md-nav__link">
+      <a href="../../use-cases/forward-only-mailserver-with-ldap-authentication/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1773,7 +2019,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/use-cases/imap-folders/" class="md-nav__link">
+      <a href="../../use-cases/imap-folders/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1794,7 +2040,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/use-cases/ios-mail-push-support/" class="md-nav__link">
+      <a href="../../use-cases/ios-mail-push-support/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1815,7 +2061,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/use-cases/auth-lua/" class="md-nav__link">
+      <a href="../../use-cases/auth-lua/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1836,11 +2082,32 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../examples/use-cases/bind-smtp-network-interface/" class="md-nav__link">
+      <a href="../../use-cases/bind-smtp-network-interface/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
     Bind outbound SMTP to a specific network
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../use-cases/external-relay-only-mailserver/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Relay inbound and outbound mail for an internal DMS
   </span>
   
 
@@ -2052,6 +2319,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2060,20 +2329,53 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#introduction" class="md-nav__link">
+  <a href="#setup-solr-for-dms" class="md-nav__link">
     <span class="md-ellipsis">
-      Introduction
+      Setup Solr for DMS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup Solr for DMS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-the-required-dovecot-solr-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      Add the required dovecot-solr package
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#example-authentik-roundcube" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#composeyaml-config" class="md-nav__link">
     <span class="md-ellipsis">
-      Example (Authentik &amp; Roundcube)
+      compose.yaml config
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-solr-for-dovecot" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure Solr for Dovecot
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trigger-dovecot-fts-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trigger Dovecot FTS indexing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2092,7 +2394,7 @@
                   
 
   
-    <a href="https://github.com/docker-mailserver/docker-mailserver/edit/master/docs/content/config/advanced/auth-oauth2.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/docker-mailserver/docker-mailserver/edit/master/docs/content/examples/tutorials/dovecot-solr.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
     </a>
@@ -2101,87 +2403,139 @@
     
       
     
-    <a href="https://github.com/docker-mailserver/docker-mailserver/raw/master/docs/content/config/advanced/auth-oauth2.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/docker-mailserver/docker-mailserver/raw/master/docs/content/examples/tutorials/dovecot-solr.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.15 8.15 0 0 1-1.23-2Z"/></svg>
     </a>
   
 
 
-  <h1>OAuth2 Authentication</h1>
-
-<h2 id="introduction"><a class="toclink" href="#introduction">Introduction</a></h2>
-<div class="admonition warning">
-<p class="admonition-title">This is only a supplement to the existing account provisioners</p>
-<p>Accounts must still be managed via the configured <a href="../../environment/#account_provisioner"><code>ACCOUNT_PROVISIONER</code></a> (FILE or LDAP).</p>
-<p>Reasoning for this can be found in <a href="https://github.com/docker-mailserver/docker-mailserver/pull/3480">#3480</a>. Future iterations on this feature may allow it to become a full account provisioner.</p>
-</div>
-<p>The present OAuth2 support provides the capability for 3rd-party applications such as Roundcube to authenticate with DMS (dovecot) by using a token obtained from an OAuth2 provider, instead of passing passwords around.</p>
-<h2 id="example-authentik-roundcube"><a class="toclink" href="#example-authentik-roundcube">Example (Authentik &amp; Roundcube)</a></h2>
-<p>This example assumes you have:</p>
+<h1 id="dovecot-full-text-search-fts-using-the-solr-backend"><a class="toclink" href="#dovecot-full-text-search-fts-using-the-solr-backend">Dovecot Full Text Search (FTS) using the Solr Backend</a></h1>
+<p>Dovecot supports several FTS backends for providing fast and efficient full text searching of e-mails directly from the IMAP server.</p>
+<p>As the size of your mail storage grows, the benefits of FTS are especially notable:</p>
 <ul>
-<li>A working DMS server set up</li>
-<li>An Authentik server set up (<a href="https://goauthentik.io/docs/installation/">documentation</a>)</li>
-<li>A Roundcube server set up (either <a href="https://hub.docker.com/r/roundcube/roundcubemail/">docker</a> or <a href="https://github.com/roundcube/roundcubemail/wiki/Installation">bare metal</a>)</li>
+<li>Without FTS, Dovecot would perform a search query by checking each individual email stored for a match, and then repeat this process again from scratch for the exact same query in future.</li>
+<li>Some mail clients (<em>like Thunderbird</em>) may provide their own indexing and search features when all mail to search is stored locally, otherwise Dovecot needs to handle the search query (<em>for example webmail and mobile clients, like Gmail</em>).</li>
+<li>FTS indexes each mail into a database for querying instead, where it can skip the cost of inspecting irrelevant emails for a query.</li>
 </ul>
-<div class="admonition example">
-<p class="admonition-title">Setup Instructions</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:3"><input checked="checked" id="1-docker-mailserver" name="__tabbed_1" type="radio" /><input id="2-authentik" name="__tabbed_1" type="radio" /><input id="3-roundcube" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="1-docker-mailserver">1. Docker Mailserver</label><label for="2-authentik">2. Authentik</label><label for="3-roundcube">3. Roundcube</label></div>
+<div class="admonition warning">
+<p class="admonition-title">This is a community contributed guide</p>
+<p>It extends <a href="../../../config/advanced/full-text-search/">our official docs for Dovecot FTS</a> with a focus on Apache Solr. DMS does not officially support this integration.</p>
+</div>
+<h2 id="setup-solr-for-dms"><a class="toclink" href="#setup-solr-for-dms">Setup Solr for DMS</a></h2>
+<p>An FTS backend supported by Dovecot is <a href="https://github.com/apache/solr">Apache Solr</a>, a fast and efficient multi-purpose search indexer.</p>
+<h3 id="add-the-required-dovecot-solr-package"><a class="toclink" href="#add-the-required-dovecot-solr-package">Add the required <code>dovecot-solr</code> package</a></h3>
+<p>As the official DMS image does not provide <code>dovecot-solr</code>, you'll need to include the package in your own image (<em>extending a DMS release as a base image</em>), or via our <a href="../../../config/advanced/override-defaults/user-patches/"><code>user-patches.sh</code> feature</a>:</p>
+<!-- This empty quote block is purely for a visual border -->
+<div class="admonition quote">
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="user-patchessh" name="__tabbed_1" type="radio" /><input id="composeyaml" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="user-patchessh"><code>user-patches.sh</code></label><label for="composeyaml"><code>compose.yaml</code></label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>Edit the following values in <code>mailserver.env</code>:
-<div class="highlight"><pre><span></span><code><span class="c1"># -----------------------------------------------</span>
-<span class="c1"># --- OAUTH2 Section ----------------------------</span>
-<span class="c1"># -----------------------------------------------</span>
+<p>If you'd prefer to avoid a custom image build. This approach is simpler but with the caveat that any time the container is restarted, you'll have a delay as the package is installed each time.</p>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 
-<span class="c1"># empty =&gt; OAUTH2 authentication is disabled</span>
-<span class="c1"># 1 =&gt; OAUTH2 authentication is enabled</span>
-<span class="na">ENABLE_OAUTH2</span><span class="o">=</span><span class="s">1</span>
-
-<span class="c1"># Specify the user info endpoint URL of the oauth2 provider</span>
-<span class="na">OAUTH2_INTROSPECTION_URL</span><span class="o">=</span><span class="s">https://authentik.example.com/application/o/userinfo/</span>
-</code></pre></div></p>
-</div>
-<div class="tabbed-block">
-<ol>
-<li>Create a new OAuth2 provider</li>
-<li>Note the client id and client secret</li>
-<li>Set the allowed redirect url to the equivalent of <code>https://roundcube.example.com/index.php/login/oauth</code> for your RoundCube instance.</li>
-</ol>
-</div>
-<div class="tabbed-block">
-<p>Add the following to <code>oauth2.inc.php</code> (<a href="https://github.com/roundcube/roundcubemail/wiki/Configuration">documentation</a>):</p>
-<div class="highlight"><pre><span></span><code><span class="x">$config[&#39;oauth_provider&#39;] = &#39;generic&#39;;</span>
-<span class="x">$config[&#39;oauth_provider_name&#39;] = &#39;Authentik&#39;;</span>
-<span class="x">$config[&#39;oauth_client_id&#39;] = &#39;&lt;insert client id here&gt;&#39;;</span>
-<span class="x">$config[&#39;oauth_client_secret&#39;] = &#39;&lt;insert client secret here&gt;&#39;;</span>
-<span class="x">$config[&#39;oauth_auth_uri&#39;] = &#39;https://authentik.example.com/application/o/authorize/&#39;;</span>
-<span class="x">$config[&#39;oauth_token_uri&#39;] = &#39;https://authentik.example.com/application/o/token/&#39;;</span>
-<span class="x">$config[&#39;oauth_identity_uri&#39;] = &#39;https://authentik.example.com/application/o/userinfo/&#39;;</span>
-
-<span class="x">// Optional: disable SSL certificate check on HTTP requests to OAuth server. For possible values, see:</span>
-<span class="x">// http://docs.guzzlephp.org/en/stable/request-options.html#verify</span>
-<span class="x">$config[&#39;oauth_verify_peer&#39;] = false;</span>
-
-<span class="x">$config[&#39;oauth_scope&#39;] = &#39;email openid profile&#39;;</span>
-<span class="x">$config[&#39;oauth_identity_fields&#39;] = [&#39;email&#39;];</span>
-
-<span class="x">// Boolean: automatically redirect to OAuth login when opening Roundcube without a valid session</span>
-<span class="x">$config[&#39;oauth_login_redirect&#39;] = false;</span>
+apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>dovecot-solr
 </code></pre></div>
 </div>
+<div class="tabbed-block">
+<p>A custom DMS image does not add much friction. You do not need a separate <code>Dockerfile</code> as Docker Compose supports building from an inline <code>Dockerfile</code> in your <code>compose.yaml</code>.</p>
+<p>The <code>image</code> key of the service is swapped for the <code>build</code> key instead, as shown below:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mailserver</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mail.example.com</span>
+<span class="w">    </span><span class="c1"># The `image` setting now represents the tag for the local build configured below:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">local/dms:14.0</span>
+<span class="w">    </span><span class="c1"># Local build (no need to try pull `image` remotely):</span>
+<span class="w">    </span><span class="nt">pull_policy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">build</span>
+<span class="w">    </span><span class="c1"># Add this `build` section to your real `compose.yaml` for your DMS service:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">dockerfile_inline</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">FROM docker.io/mailserver/docker-mailserver:14.0</span>
+<span class="w">        </span><span class="no">RUN apt-get update &amp;&amp; apt-get install dovecot-solr</span>
+</code></pre></div>
+<ul>
+<li>Just run <code>docker compose up</code> and it will pull DMS and build your custom image to run a container.</li>
+<li>Updating to a new DMS release is straight-forward, just adjust the version tag as you normally would. If you make future changes that don't apply, you may need to force a rebuild.</li>
+<li>This approach only needs to install the package once with the image build itself. This minimizes delay of container startup.</li>
+</ul>
 </div>
 </div>
 </div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Why doesn't DMS include <code>dovecot-solr</code>?</p>
+<p>This integration is not officially supported in DMS as no maintainer is able to provide troubleshooting support.</p>
+<p>Prior to v14, the package was included but the community contributed guide had been outdated for several years that it was non-functional. It was decided that it was better to drop support and docs, however some DMS users voiced active use of Solr and it's benefits over Xapian for FTS which led to these revised docs.</p>
+<p><strong>ARM64 builds do not have support for <code>dovecot-solr</code></strong>. Additionally the <a href="https://github.com/docker-mailserver/docker-mailserver/issues/4052">user demand for including <code>dovecot-solr</code> is presently too low</a> to justify vs the minimal effort to add additional packages as shown above.</p>
+</div>
+<h3 id="composeyaml-config"><a class="toclink" href="#composeyaml-config"><code>compose.yaml</code> config</a></h3>
+<p>Firstly you need a working Solr container, for this the <a href="https://hub.docker.com/_/solr">official docker image</a> will do:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">solr</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">solr:latest</span>
+<span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dms-solr</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># As Solr can be quite resource hungry, raise the memory limit to 2GB.</span>
+<span class="w">      </span><span class="c1"># The default is 512MB, which may be exhausted quickly.</span>
+<span class="w">      </span><span class="nt">SOLR_JAVA_MEM</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;-Xms2g</span><span class="nv"> </span><span class="s">-Xmx2g&quot;</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./docker-data/solr:/var/solr</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+</code></pre></div>
+<p>DMS will connect internally to the <code>solr</code> service above. Either have both services in the same <code>compose.yaml</code> file, or ensure that the containers are connected to the same docker network.</p>
+<h3 id="configure-solr-for-dovecot"><a class="toclink" href="#configure-solr-for-dovecot">Configure Solr for Dovecot</a></h3>
+<ol>
+<li>
+<p>Once the Solr container is started, you need to configure a "Solr core" for Dovecot:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>dms-solr<span class="w"> </span>/bin/sh
+solr<span class="w"> </span>create<span class="w"> </span>-c<span class="w"> </span>dovecot
+cp<span class="w"> </span>-R<span class="w"> </span>/opt/solr/contrib/analysis-extras/lib<span class="w"> </span>/var/solr/data/dovecot
+</code></pre></div>
+<p>Stop the <code>dms-solr</code> container and you should now have a <code>./data/dovecot</code> folder in the local bind mount volume.</p>
+</li>
+<li>
+<p>Solr needs a schema that is specifically tailored for Dovecot FTS.</p>
+<p>As of writing of this guide, Solr 9 is the current release. <a href="https://github.com/dovecot/core/tree/main/doc">Dovecot provides the required schema configs</a> for Solr, copy the following two v9 config files to <code>./data/dovecot</code> and rename them accordingly:</p>
+<ul>
+<li><code>solr-config-9.xml</code> (<em>rename to <code>solrconfig.xml</code></em>)</li>
+<li><code>solr-schema-9.xml</code> (<em>rename to <code>schema.xml</code></em>)</li>
+</ul>
+<p>Additionally, remove the <code>managed-schema.xml</code> file from <code>./data/dovecot</code> and ensure the two files you copied have a <a href="https://github.com/apache/solr-docker/blob/9cd850b72309de05169544395c83a85b329d6b86/9.6/Dockerfile#L89-L92">UID and GID of <code>8983</code></a> assigned.</p>
+<p>Start the Solr container once again, you should now have a working Solr core specifically for Dovecot FTS.</p>
+</li>
+<li>
+<p>Configure Dovecot in DMS to connect to this Solr core:</p>
+<p>Create a <code>10-plugin.conf</code> file in your <code>./config/dovecot</code> folder with this contents:</p>
+<div class="highlight"><pre><span></span><code>mail_plugins = $mail_plugins fts fts_solr
+
+plugin {
+  fts = solr
+  fts_autoindex = yes
+  fts_solr = url=http://dms-solr:8983/solr/dovecot/
+}
+</code></pre></div>
+<p>Add a volume mount for that config to your DMS service in <code>compose.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">services</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mailserver</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./docker-data/config/dovecot/10-plugin.conf:/etc/dovecot/conf.d/10-plugin.conf:ro</span>
+</code></pre></div>
+</li>
+</ol>
+<h3 id="trigger-dovecot-fts-indexing"><a class="toclink" href="#trigger-dovecot-fts-indexing">Trigger Dovecot FTS indexing</a></h3>
+<p>After following the previous steps, restart DMS and run this command to have Dovecot re-index all mail:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>mailserver<span class="w"> </span>doveadm<span class="w"> </span>fts<span class="w"> </span>rescan<span class="w"> </span>-A
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Indexing will take a while depending on how large your mail folders</p>
+<p>Usually within 15 minutes or so, you should be able to search your mail using the Dovecot FTS feature! <img alt="🎉" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.0.3/assets/svg/1f389.svg" title=":tada:" /></p>
+</div>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2235,7 +2589,7 @@
     <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.expand", "navigation.instant", "content.action.edit", "content.action.view", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.c8d2eff1.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
       
     
   </body>
