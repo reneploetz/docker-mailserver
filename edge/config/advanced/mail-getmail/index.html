@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../../../assets/logo/favicon-32x32.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.31">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.33">
     
     
       
@@ -2391,11 +2391,15 @@
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ENABLE_GETMAIL=1</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GETMAIL_POLL=5</span>
 </code></pre></div>
-<p>In your DMS config volume (eg: <code>docker-data/dms/config/</code>), create a <code>getmail-&lt;ID&gt;.cf</code> file for each remote account that you want to retrieve mail and store into a local DMS account. <code>&lt;ID&gt;</code> should be replaced by you, and is just the rest of the filename (eg: <code>getmail-example.cf</code>). The contents of each file should be configuration like documented below.</p>
-<p>The directory structure should similar to this:</p>
+<p>In your DMS config volume (eg: <code>docker-data/dms/config/</code>), add a subdirectory <code>getmail/</code> for including your getmail config files (eg: <code>imap-example.cf</code>) for each remote account that you want to retrieve mail from and deliver to the mailbox of a DMS account.</p>
+<p>The content of these config files is documented in the next section with an IMAP and POP3 example to reference.</p>
+<p>The directory structure should look similar to this:</p>
 <div class="highlight"><pre><span></span><code>├── docker-data/dms/config
 │   ├── dovecot.cf
-│   ├── getmail-example.cf
+│   ├── getmail
+│   │   ├── getmailrc_general.cf
+│   │   ├── remote-account1.cf
+│   │   ├── remote-account2.cf
 │   ├── postfix-accounts.cf
 │   └── postfix-virtual.cf
 ├── docker-compose.yml
@@ -2413,7 +2417,11 @@ max_messages_per_session = 500
 received = false
 delivered_to = false
 </code></pre></div>
-<p>If you want to use a different base config, mount a file to <code>/etc/getmailrc_general</code>. This file will replace the default "Common Options" base config above, that all <code>getmail-&lt;ID&gt;.cf</code> files will extend with their configs when used.</p>
+<p>The DMS integration for Getmail generates a <code>getmailrc</code> config that prepends the common options of the base config to each remote account config file (<code>*.cf</code>) found in the DMS Config Volume <code>getmail/</code> directory.</p>
+<div class="admonition tip">
+<p class="admonition-title">Change the base options</p>
+<p>Add your own base config as <code>getmail/getmailrc_general.cf</code> into the DMS Config Volume. It will replace the DMS defaults shown above.</p>
+</div>
 <details class="example">
 <summary>IMAP Configuration</summary>
 <p>This example will:</p>
@@ -2423,7 +2431,7 @@ delivered_to = false
 <li>Store any mail retrieved from the remote mail-server into DMS for the <code>user1@example.com</code> account that DMS manages.</li>
 </ol>
 <div class="highlight"><pre><span></span><code>[retriever]
-type = SimpleIMAPRetriever
+type = SimpleIMAPSSLRetriever
 server = imap.gmail.com
 username = alice
 password = notsecure
@@ -2438,7 +2446,7 @@ arguments =(&quot;-d&quot;,&quot;user1@example.com&quot;)
 <summary>POP3 Configuration</summary>
 <p>Just like the IMAP example above, but instead via POP3 protocol if you prefer that over IMAP.</p>
 <div class="highlight"><pre><span></span><code>[retriever]
-type = SimplePOP3Retriever
+type = SimplePOP3SSLRetriever
 server = pop3.gmail.com
 username = alice
 password = notsecure
@@ -2450,7 +2458,7 @@ arguments =(&quot;-d&quot;,&quot;user1@example.com&quot;)
 </code></pre></div>
 </details>
 <h3 id="polling-interval"><a class="toclink" href="#polling-interval">Polling Interval</a></h3>
-<p>By default the <code>getmail</code> service checks external mail accounts for new mail every 5 minutes. That polling interval is configurable via the <code>GETMAIL_POLL</code> ENV variable, with a value in minutes (<em>default: 5, min: 1, max: 30</em>):</p>
+<p>By default the <code>getmail</code> service checks external mail accounts for new mail every 5 minutes. That polling interval is configurable via the <code>GETMAIL_POLL</code> ENV variable, with a value in minutes (<em>default: 5, min: 1</em>):</p>
 <div class="highlight"><pre><span></span><code><span class="nt">environment</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GETMAIL_POLL=1</span>
 </code></pre></div>
@@ -2518,7 +2526,7 @@ arguments =(&quot;-d&quot;,&quot;user1@example.com&quot;)
     <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.tabs", "navigation.top", "navigation.expand", "navigation.instant", "content.action.edit", "content.action.view", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.af256bd8.min.js"></script>
       
     
   </body>
